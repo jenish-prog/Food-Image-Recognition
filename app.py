@@ -5,7 +5,7 @@ import math
 import os
 import numpy as np
 from tensorflow.keras.preprocessing import image
-from tensorflow.python.keras.models import load_model
+from tensorflow.keras.models import load_model
 from werkzeug.utils import secure_filename
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -163,7 +163,7 @@ def index():
 
 @app.route('/recognize')
 def magic():
-    return render_template('recognize.html', img=file)
+    return render_template('recognize.html')
 
 
 @app.route('/upload', methods=['POST'])
@@ -177,7 +177,7 @@ def upload():
         f.save(name)
 
     pack[0] = []
-    return render_template('recognize.html', img=file)
+    return render_template('recognize.html')
 
 
 @app.route('/predict')
@@ -231,11 +231,12 @@ def predict():
         nutrients[3]['value'] = (nutrients[3]['value'] + p['nutrition'][3]['value'])
         nutrients[4]['value'] = (nutrients[4]['value'] + p['nutrition'][4]['value'])
 
-    nutrients[0]['value'] = nutrients[0]['value'] / num[0]
-    nutrients[1]['value'] = nutrients[1]['value'] / num[0]
-    nutrients[2]['value'] = nutrients[2]['value'] / num[0]
-    nutrients[3]['value'] = nutrients[3]['value'] / num[0]
-    nutrients[4]['value'] = nutrients[4]['value'] / num[0]
+    if num[0] > 0:
+        nutrients[0]['value'] = nutrients[0]['value'] / num[0]
+        nutrients[1]['value'] = nutrients[1]['value'] / num[0]
+        nutrients[2]['value'] = nutrients[2]['value'] / num[0]
+        nutrients[3]['value'] = nutrients[3]['value'] / num[0]
+        nutrients[4]['value'] = nutrients[4]['value'] / num[0]
 
     return render_template('results.html', pack=pack[0], whole_nutrition=nutrients)
 
